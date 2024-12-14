@@ -6,13 +6,13 @@ from .permissions import IsAdminUserOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
-
+# Сериализатор  для жанров
 class GenreSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Genre
         fields = '__all__'
 
-
+# Сериализатор для отображения в книгах только имени, фамилии, юрл автора
 class AuthorUrlSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name = 'author-detail')
 
@@ -20,6 +20,7 @@ class AuthorUrlSerializer(serializers.HyperlinkedModelSerializer):
         model = Author
         fields = ['first_name', 'last_name', 'url']
 
+# Сериализатор для отоборажения книг
 class BookSerializer(serializers.HyperlinkedModelSerializer):
     authors = AuthorUrlSerializer(many=True, read_only=True)
 
@@ -27,7 +28,7 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
         model = Book
         fields = ['id', 'title', 'release_date', 'genre', 'category', 'image', 'file', 'authors' ]  # Возвращаем поля книги
 
-
+# Сериализатор для отображения в авторах только название и юрл книг(и)
 class BookTitleUrlSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='book-detail')  # Убедитесь, что у вас есть соответствующий URL
 
@@ -35,7 +36,7 @@ class BookTitleUrlSerializer(serializers.ModelSerializer):
         model = Book
         fields = ['title', 'url']  # Возвращаем только название и URL
 
-
+# Сериализатор  для отображения данных автора
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     books = BookTitleUrlSerializer(many=True, read_only=True)  # Используем новый сериализатор
 
@@ -43,7 +44,7 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
         model = Author
         fields = ['id', 'first_name', 'last_name', 'birthday', 'death_day', 'books']  # Добавляем поле books
 
-
+# класс для авторов, который наследуется от 'viewsets.ModelViewSet' в REST он нужен для обработки запросов к модели Author представляя стандартные операции CRUD (создание, чтение, обновление и удаление)
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
@@ -61,7 +62,7 @@ class AuthorViewSet(viewsets.ModelViewSet):
 
         return super().create(request, *args, **kwargs)
 
-
+# класс для жанров, который наследуется от 'viewsets.ModelViewSet' в REST он нужен для обработки запросов к модели Genre представляя стандартные операции CRUD (создание, чтение, обновление и удаление)
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
@@ -78,7 +79,7 @@ class GenreViewSet(viewsets.ModelViewSet):
 
         return super().create(request, *args, **kwargs)
 
-
+# класс для книг, который наследуется от 'viewsets.ModelViewSet' в REST он нужен для обработки запросов к модели Book представляя стандартные операции CRUD (создание, чтение, обновление и удаление)
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer

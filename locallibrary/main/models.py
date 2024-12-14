@@ -1,5 +1,6 @@
 from django.db import models
 
+# модель авторов
 class Author(models.Model):
     first_name = models.CharField(max_length=100, blank=False)
     last_name = models.CharField(max_length=100, blank=False)
@@ -10,12 +11,14 @@ class Author(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+# модель жанров
 class Genre(models.Model):
     name = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.name
 
+# модель книг
 class Book(models.Model):
     title = models.CharField(max_length=100, blank=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)

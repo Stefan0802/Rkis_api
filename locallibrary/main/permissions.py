@@ -3,7 +3,7 @@ from rest_framework import permissions
 class IsAdminUserOrReadOnly(permissions.BasePermission):
     """
     Разрешает доступ только администраторам для создания, изменения и удаления книг.
-    Остальные пользователи могут только просматривать книги.
+    Остальные пользователи могут только просматривать.
     """
 
     def has_permission(self, request, view):

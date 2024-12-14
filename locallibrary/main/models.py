@@ -4,8 +4,8 @@ class Author(models.Model):
     first_name = models.CharField(max_length=100, blank=False)
     last_name = models.CharField(max_length=100, blank=False)
     birthday = models.DateField(blank=False, null=False)
-    death_day = models.DateField(blank=True, null=False)
-    books = models.ManyToManyField('Book', related_name='authors')
+    death_day = models.DateField(blank=True, null=True)
+    books = models.ManyToManyField('Book', related_name='authors', blank=True, null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
